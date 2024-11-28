@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Дарья",
+    "lastname": "Горелкина",
+    "login": "user1",
+    "email": "fjnv@mail.ru",
+    "password": "111",
+    "notes": [
+      {
+        "id": 1731853495355,
+        "title": "Заметка 2",
+        "description": "Это моя первая заметка, прикинь, оно даже сохраняется)",
+        "tags": []
+      },
+      {
+        "id": 1731968384267,
+        "title": "Форматирование",
+        "description": "Типо тут можно сохранить\nТакой форматированный\nТекст"
+      }
+    ],
+    "foto": "https://www.gravatar.com/avatar/c7a3db18804f0e19f771ce445cad33113b5cc2f91d305b66f1ff1006631069ee?s=200&d=identicon"
+  },
+  {
+    "name": "AAA",
+    "lastname": "AAA",
+    "login": "user2",
+    "email": "fjnv@mail.ru",
+    "password": "111",
+    "notes": [
+      {
+        "id": 1,
+        "title": "ЭТО РАБОТАЕТ",
+        "description": "Я в шоке очень большом правда!!!!"
+      },
+      {
+        "id": 1731961970895,
+        "title": "Проверка",
+        "description": "Что тут тоже работает изменение!"
+      }
+    ],
+    "foto": "https://www.gravatar.com/avatar/c7a3db18804f0e19f771ce445cad33113b5cc2f91d305b66f1ff1006631069ee?s=200&d=identicon"
+  }
+]
