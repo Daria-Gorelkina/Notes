@@ -26,6 +26,7 @@ const modalSlice = createSlice({
         },
         resetNewNote: (state) => {
             state.newNote = { title: '', description: '',tags: [], id: null };
+
         }
     }
 });

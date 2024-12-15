@@ -7,7 +7,11 @@ export const fetchNotes = createAsyncThunk(
     async (login, { rejectWithValue }) => {
         try {
             const response = await axios.get(`http://localhost:5137/users/${login}/notes`);
-            return response.data.notes;
+            const notesWithTags = await Promise.all(response.data.notes.map(async (note) => {
+                const tagsResponse = await axios.get(`http://localhost:5137/users/${login}/notes/${note.id}/tags`);
+                return { ...note, tags: tagsResponse.data.tags };
+            }));
+            return notesWithTags;
         } catch (error) {
             window.location.href = '/';
         }

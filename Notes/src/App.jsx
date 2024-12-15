@@ -5,12 +5,15 @@ import Main from './components/Main.jsx';
 import Profile from './components/Profile.jsx';
 import SignIn from './components/SignIn.jsx';
 import SignUp from './components/SignUp.jsx';
+import Tags from "./components/Tags.jsx";
+
 
 const App = () => (
     <Router>
         <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/main/:login" element={<Main />} />
+            <Route path="/tags/:login" element={<Tags />} />
             <Route path="/profile/:login" element={<Profile />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />

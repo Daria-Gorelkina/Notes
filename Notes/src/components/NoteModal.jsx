@@ -52,7 +52,7 @@ const NoteModal = () => {
                             <input
                                 type="text"
                                 id="noteTitle"
-                                className="form-control"
+                                className="form-control form-control-edit-note"
                                 value={title}
                                 onChange={(e) => {
                                     setTitle(e.target.value);
@@ -64,7 +64,7 @@ const NoteModal = () => {
                             <label htmlFor="noteDescription">Текст</label>
                             <textarea
                                 id="noteDescription"
-                                className="form-control"
+                                className="form-control form-control-edit-note"
                                 value={description}
                                 onChange={(e) => {
                                     setDescription(e.target.value);
@@ -78,7 +78,7 @@ const NoteModal = () => {
                                     <button type="button" className="btn btn-secondary m-2" onClick={() => dispatch(closeModal())}>
                                         Закрыть
                                     </button>
-                                    <button type="button" className="btn btn-primary m-2" onClick={handleSubmit}>
+                                    <button type="button" className="btn btn-secondary m-2" onClick={handleSubmit}>
                                         Добавить
                                     </button>
                     </div>

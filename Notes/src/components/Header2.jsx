@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {useSelector} from "react-redux";
 import axios from "axios";
 
 const Header = ({ onSearch }) => {
     const { login} = useParams();
     const [foto, setFoto] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -22,17 +20,9 @@ const Header = ({ onSearch }) => {
         fetchProfileData();
     }, [login]);
 
-    const handleSearchChange = (e) => {
-        const value = e.target.value;
-        console.log(value);
-        setSearchQuery(value);
-        onSearch(value); // Передаем строку поиска в родительский компонент
-    };
-
 
     return (
         <header className="p-3 mb-3 border-bottom">
-            {console.log({foto})}
             <div className="container">
                 <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <a className="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
@@ -44,10 +34,6 @@ const Header = ({ onSearch }) => {
                         <li className="links"><a href={`/tags/${login}`} className="nav-link px-2 link-dark">Теги</a></li>
                     </ul>
 
-                    <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 text-center">
-                        <input className="search style-search" type="search" placeholder="Search..." aria-label="Search" value={searchQuery}
-                               onChange={handleSearchChange}/>
-                    </form>
 
                     <div className="dropdown text-end">
                         <a href="#" className="d-block link-dark text-decoration-none dropdown-toggle"

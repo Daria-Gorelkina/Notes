@@ -14,6 +14,7 @@ const editNoteSlice = createSlice({
         clearEditNote: (state) => {
             state.note = null;
             state.isEditing = false;
+            window.location.reload()
         },
     },
 });

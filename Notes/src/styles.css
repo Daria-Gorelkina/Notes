@@ -2,6 +2,25 @@
     color: white;
 }
 
+header {
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.btn-danger {
+    --bs-btn-color: black;
+}
+
+.btn-danger:hover {
+    --bs-btn-color: black;
+}
+
+html.for_profile {
+    height: 100% !important;
+}
+
 .background_body {
     background-image: url('https://static.tildacdn.com/tild6535-6435-4030-b436-313637366437/2216eb25006b4dc2bcef04fa37361abb.jpg');
     background-size: cover;
@@ -104,10 +123,6 @@ form input:focus {
     }
 }
 
-.notes {
-    border: 1px solid black;
-}
-
 .dropdown, .dropdown-center, .dropend, .dropstart, .dropup, .dropup-center {
     position: relative;
 }
@@ -178,9 +193,7 @@ form input:focus {
     width: 100%;
     padding: 10px;
     transition: opasity .1s linear;
-    border-radius: 5px !important;
     opacity: 1;
-    border: 2px solid #332C1C !important;
     background-color: white !important;
 }
 
@@ -204,19 +217,63 @@ form input:focus {
     transition: all 0.3s ease;
 }
 
+.btn-primary {
+    --bs-btn-color: black !important;
+}
+
 .fixed-btn:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     transform: scale(1.1);
 }
 
-.notes {
-    position: relative; /* Чтобы кнопка "Удалить" позиционировалась относительно заметки */
-    border: 1px solid black;
-    padding: 10px;
-    transition: all 0.3s ease;
+.sorted-style {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn_notes_delete, .btn_notes_update, .btn_notes_view {
+.h5_style {
+    color: #332C1C;
+    margin-bottom: 15px;
+}
+
+.notes {
+    position: relative; /* Чтобы кнопка "Удалить" позиционировалась относительно заметки */
+    background: rgba(230, 228, 225, 0.9);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 15px;
+}
+
+.notes:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.notes h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #332C1C;
+    margin-bottom: 0px;
+}
+
+form input[type="search"] {
+    width: 250px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 2px solid black;
+    background: white;
+    transition: border-color 0.3s;
+}
+
+/* Ссылки в карточках */
+.notes a {
+    color: #332C1C;
+    text-decoration: none;
+}
+
+.btn_notes_delete, .btn_notes_update, .btn_notes_view, .btn_notes_tag {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -237,11 +294,12 @@ form input:focus {
 
 .notes:hover .btn_notes_delete,
 .notes:hover .btn_notes_update,
-.notes:hover .btn_notes_view {
+.notes:hover .btn_notes_view,
+.notes:hover .btn_notes_tag {
     display: block !important; /* Кнопки появляются при наведении на .notes */
 }
 
-.btn_notes_delete:hover, .btn_notes_update:hover, .btn_notes_view:hover {
+.btn_notes_delete:hover, .btn_notes_update:hover, .btn_notes_view:hover, .btn_notes_tag:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     transform: scale(1.1);
 }
@@ -270,3 +328,154 @@ form input:focus {
     width: 20px;
     background: #3d405b !important;
 }
+
+.btn_notes_tag {
+    right: 160px;
+}
+
+.style-search {
+    color: black;
+
+}
+
+.modal {
+    background: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #E0D9C3; /* Фон в стиле ваших форм */
+    border-radius: 12px; /* Закругленные углы */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Тень для выделения */
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    color: #332C1C; /* Цвет текста */
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #332C1C; /* Акцентная линия */
+    padding-bottom: 10px;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #332C1C;
+}
+
+.close {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #332C1C;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.close:hover {
+    transform: scale(1.1);
+    color: #868276; /* Цвет при наведении */
+}
+
+.modal-body {
+    margin-top: 20px;
+    color: #332C1C;
+}
+
+.list-group-item {
+    background: rgba(230, 228, 225, 0.9);
+    border: 1px solid #332C1C;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.btn-danger {
+    background-color: #b22222 !important;
+    border-color: #b22222 !important;
+    color: white !important;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #a11d1d !important;
+    transform: scale(1.1);
+}
+
+.input-group {
+    margin-top: 15px;
+    display: flex;
+    align-items: baseline !important;
+}
+
+.input-group .form-control {
+    border-color: #332C1C !important;
+    background-color: white !important;
+    color: black;
+}
+
+.input-group .btn-primary {
+    background-color: #332C1C !important;
+    border-color: #332C1C !important;
+    color: white !important;
+    border-bottom-left-radius: 5px !important;
+    border-top-left-radius: 5px !important;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-left: 10px !important;
+}
+
+.input-group .btn-primary:hover {
+    background-color: #868276 !important;
+    color: black !important;
+    transform: scale(1.1);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 2px solid #332C1C; /* Акцентная линия */
+    padding-top: 10px;
+    margin-top: 20px;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #868276 !important;
+    border-color: #332C1C !important;
+    color: white !important;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #332C1C !important;
+    color: white !important;
+    transform: scale(1.1);
+}
+
+.form-control-edit-note {
+    border: 2px solid black !important;
+    background-color: white !important;
+}
+
+.avatar_login {
+    background: rgba(230, 228, 225, 0.9);
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+}
+
+.bi-arrow-repeat {
+    width: 100px;
+    height: 100px;
+}
+

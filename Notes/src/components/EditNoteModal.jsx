@@ -52,7 +52,7 @@ const EditNoteModal = () => {
                             <input
                                 type="text"
                                 id="noteTitle"
-                                className="form-control"
+                                className="form-control form-control-edit-note"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
@@ -61,7 +61,7 @@ const EditNoteModal = () => {
                             <label htmlFor="noteDescription">Описание</label>
                             <textarea
                                 id="noteDescription"
-                                className="form-control"
+                                className="form-control form-control-edit-note"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 style={{ whiteSpace: 'pre-wrap' }}
@@ -78,7 +78,7 @@ const EditNoteModal = () => {
                         </button>
                         <button
                             type="button"
-                            className="btn btn-primary"
+                            className="btn btn-secondary"
                             onClick={handleSave}
                         >
                             Сохранить
