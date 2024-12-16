@@ -26,6 +26,7 @@ const SignUp = () => {
                 console.error('No data returned from server');
             }
         } catch (error) {
+            setError(error.response?.data?.message);
             console.error('Error:', error.message);
         }
     };
@@ -41,7 +42,6 @@ const SignUp = () => {
                 ...prevUserInfo,
                 ['foto']: `https://www.gravatar.com/avatar/${CryptoJS.SHA256( value )}?s=200&d=identicon`,
             }));
-            console.log(`https://www.gravatar.com/avatar/${CryptoJS.SHA256( value )}?s=200&d=identicon`)
         }
         setUserInfo((prevUserInfo) => ({
             ...prevUserInfo,

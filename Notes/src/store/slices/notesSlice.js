@@ -25,7 +25,7 @@ export const addNote = createAsyncThunk(
             const response = await axios.post(`http://localhost:5137/users/${login}/notes`, note);
             return response.data.note;
         } catch (error) {
-            return rejectWithValue('Не удалось добавить заметку');
+            return rejectWithValue(error.response?.data?.message || 'Не удалось добавить заметку');
         }
     }
 );
@@ -37,7 +37,7 @@ export const deleteNote = createAsyncThunk(
             await axios.delete(`http://localhost:5137/users/${login}/notes/${noteId}`);
             return noteId;
         } catch (error) {
-            return rejectWithValue('Не удалось удалить заметку');
+            return rejectWithValue(error.response?.data?.message || 'Не удалось удалить заметку');
         }
     }
 );
@@ -50,7 +50,7 @@ export const updateNote = createAsyncThunk(
             return response.data.note;
         } catch (error) {
             console.log(error)
-            return rejectWithValue('Не удалось обновить заметку');
+            return rejectWithValue(error.response?.data?.message || 'Не удалось обновить заметку');
         }
     }
 );

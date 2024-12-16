@@ -10,7 +10,7 @@ export const fetchProfile = createAsyncThunk(
             const response = await axios.get(`http://localhost:5137/profile/${login}`); // Измените на ваш маршрут
             return response.data; // Предполагается, что API возвращает объект профиля
         } catch (error) {
-            return rejectWithValue('Не удалось загрузить профиль');
+            return rejectWithValue(error.response?.data?.message || 'Не удалось загрузить профиль');
         }
     }
 );
@@ -22,7 +22,7 @@ export const updateProfile = createAsyncThunk(
             const response = await axios.put(`http://localhost:5137/profile/${login}`, profileData); // Измените на ваш маршрут
             return response.data; // Предполагается, что API возвращает обновленный объект профиля
         } catch (error) {
-            return rejectWithValue('Не удалось обновить профиль');
+            return rejectWithValue(error.response?.data?.message || 'Не удалось обновить профиль');
         }
     }
 );
@@ -35,7 +35,7 @@ export const deleteProfile = createAsyncThunk(
             const response = await axios.delete(`http://localhost:5137/profile/${login}`);
             return response.data; // Возвращает успешное сообщение
         } catch (error) {
-            return rejectWithValue('Не удалось удалить профиль');
+            return rejectWithValue(error.response?.data?.message || 'Не удалось удалить профиль');
         }
     }
 );

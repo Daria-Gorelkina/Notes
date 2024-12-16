@@ -58,10 +58,13 @@ export const validate = (schema) => async (req, res, next) => {
             field: error.path, // Название поля, которое не прошло валидацию
             message: error.message, // Сообщение об ошибке
         }));
-
+        const errorMessage = formattedErrors
+            .map((e, index) => `Ошибка ${index + 1}: ${e.field} - ${e.message}`)
+            .join(", ");
+        console.log(errorMessage)
         res.status(400).json({
             success: false,
-            message: 'Ошибка валидации данных',
+            message: errorMessage,
             errors: formattedErrors,
         });
     }
@@ -236,7 +239,7 @@ app.delete('/users/:login/notes/:noteId', requireAuth, async (req, res) => {
 });
 
 // Редактировать заметку
-app.put('/users/:login/notes/:noteId', requireAuth, async (req, res) => {
+app.put('/users/:login/notes/:noteId', validate(noteSchema), requireAuth, async (req, res) => {
     const { login, noteId } = req.params;
     const { title, description, date } = req.body;
 
@@ -321,41 +324,55 @@ app.put('/profile/:login', validate(profileSchema), requireAuth, async (req, res
 
 app.delete('/profile/:login', requireAuth, async (req, res) => {
     const { login } = req.params;
+
     try {
+        // Получаем ID пользователя по его логину
         const ResultUserId = await pool.query(
-          `SELECT id FROM users WHERE login = $1`, [login]
+            `SELECT id FROM users WHERE login = $1`, [login]
         );
 
-
-        const UserId = ResultUserId.rows[0].id;
-
-        const ResultIdNote = await pool.query(
-            `SELECT id FROM notes WHERE user_id = $1`, [UserId]
-        );
-        const NoteId = ResultIdNote.rows[0].id;
-
-        const DelTagNoteResult = await pool.query(
-            `DELETE FROM note_tags
-        WHERE note_id = $1`, [NoteId]
-        )
-
-        const DelNoteResult = await pool.query(
-            `DELETE FROM notes WHERE user_id = $1`,
-            [UserId]
-        );
-
-        const result = await pool.query(
-            `DELETE FROM users WHERE login = $1`,
-            [login]
-        );
-
-
-
-        if (result.rowCount === 0) {
+        if (ResultUserId.rowCount === 0) {
             return res.status(404).json({ success: false, message: 'Пользователь не найден' });
         }
 
-        res.json({ success: true, message: 'Пользователь успешно удален' });
+        const UserId = ResultUserId.rows[0].id;
+
+        // Проверяем, есть ли у пользователя заметки
+        const ResultIdNote = await pool.query(
+            `SELECT id FROM notes WHERE user_id = $1`, [UserId]
+        );
+        console.log(ResultIdNote.rows)
+        if (ResultIdNote.rowCount > 0) {
+            // Если заметки есть, обрабатываем их
+            for (let i = 0; i < ResultIdNote.rowCount; i++) {
+                const NoteId = ResultIdNote.rows[i].id;
+                console.log('PFVTYVSDAYGITYILTYGVLYGLYFVGOTFOFOTFU', NoteId)
+
+                // Проверяем, есть ли теги у заметки
+                const ResultTags = await pool.query(
+                    `SELECT tag_id FROM note_tags WHERE note_id = $1`, [NoteId]
+                );
+
+                if (ResultTags.rowCount > 0) {
+                    // Если теги есть, удаляем их
+                    await pool.query(
+                        `DELETE FROM note_tags WHERE note_id = $1`, [NoteId]
+                    );
+                }
+
+                // Удаляем заметку
+                await pool.query(
+                    `DELETE FROM notes WHERE id = $1`, [NoteId]
+                );
+            }
+        }
+
+        // Удаляем пользователя
+        const result = await pool.query(
+            `DELETE FROM users WHERE id = $1`, [UserId]
+        );
+
+        res.json({ success: true, message: 'Пользователь успешно удалён' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Ошибка сервера' });
