@@ -1,15 +1,6 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
-    ports:
-      - "5137:5137"
-    environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/app_db
-    depends_on:
-      - db
-
   db:
     image: postgres
     ports:

@@ -11,6 +11,7 @@ import * as yup from 'yup';
 const { Pool } = pkg;
 const app = express();
 const PORT = 5137;
+const USERS_FILE_PATH = path.join(process.cwd(), 'users_test.json');
 
 // Настройка подключения к PostgreSQL
 const pool = new Pool({
@@ -20,6 +21,7 @@ const pool = new Pool({
     password: 'password',
     port: 5432,
 });
+
 // Схема для регистрации
 export const signupSchema = yup.object().shape({
     name: yup.string().required('Имя обязательно'),
@@ -35,14 +37,12 @@ export const signinSchema = yup.object().shape({
     password: yup.string().required('Пароль обязателен'),
 });
 
-// Схема для заметок
 const noteSchema = yup.object().shape({
     title: yup.string().required('Заголовок обязателен'),
     description: yup.string().required('Описание обязательно'),
     tags: yup.array().of(yup.string()),
 });
 
-// Схема для профиля
 export const profileSchema = yup.object().shape({
     name: yup.string().required('Имя обязательно'),
     lastname: yup.string().required('Фамилия обязательна'),
@@ -72,11 +72,11 @@ export const validate = (schema) => async (req, res, next) => {
 
 // Настройка сессий
 app.use(session({
-    secret: 'mysecretkey',
+    secret: 'your_secret_key', // Замените на ваш секретный ключ
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 3600000,
+        maxAge: 3600000, // Время жизни куки: 1 час
     },
 }));
 
@@ -97,7 +97,7 @@ const requireAuth = (req, res, next) => {
 };
 
 app.get('/some-protected-route', (req, res) => {
-    console.log('Куки запроса:', req.cookies);
+    console.log('Куки запроса:', req.cookies);  // Логирование куков
     if (req.session.user) {
         res.json({ message: 'Доступ разрешен' });
     } else {
@@ -220,41 +220,23 @@ app.delete('/users/:login/notes/:noteId', requireAuth, async (req, res) => {
 
     if (req.session.user.login !== login) {
         return res.status(403).json({ success: false, message: 'Доступ запрещен' });
+        res.redirect('/')
     }
 
     try {
-        // Проверяем наличие тегов у заметки
-        const tagsResult = await pool.query(
-            `SELECT tag_id FROM note_tags WHERE note_id = $1`,
-            [noteId]
-        );
-
-        if (tagsResult.rowCount > 0) {
-            // Если теги есть, удаляем их
-            await pool.query(
-                `DELETE FROM note_tags WHERE note_id = $1`,
-                [noteId]
-            );
-        }
-
-        // Удаляем саму заметку
-        const noteResult = await pool.query(
-            `DELETE FROM notes 
-             WHERE id = $1 AND user_id = (SELECT id FROM users WHERE login = $2)`,
+        const result = await pool.query(
+            `DELETE FROM notes WHERE id = $1 AND user_id = (SELECT id FROM users WHERE login = $2)`,
             [noteId, login]
         );
-
-        if (noteResult.rowCount === 0) {
+        if (result.rowCount === 0) {
             res.status(404).json({ success: false, message: 'Заметка не найдена' });
         } else {
             res.json({ success: true });
         }
     } catch (err) {
-        console.error(err);
         res.status(500).json({ success: false, message: 'Ошибка сервера' });
     }
 });
-
 
 // Редактировать заметку
 app.put('/users/:login/notes/:noteId', validate(noteSchema), requireAuth, async (req, res) => {
@@ -344,6 +326,7 @@ app.delete('/profile/:login', requireAuth, async (req, res) => {
     const { login } = req.params;
 
     try {
+        // Получаем ID пользователя по его логину
         const ResultUserId = await pool.query(
             `SELECT id FROM users WHERE login = $1`, [login]
         );
@@ -354,28 +337,37 @@ app.delete('/profile/:login', requireAuth, async (req, res) => {
 
         const UserId = ResultUserId.rows[0].id;
 
+        // Проверяем, есть ли у пользователя заметки
         const ResultIdNote = await pool.query(
             `SELECT id FROM notes WHERE user_id = $1`, [UserId]
         );
         console.log(ResultIdNote.rows)
         if (ResultIdNote.rowCount > 0) {
+            // Если заметки есть, обрабатываем их
             for (let i = 0; i < ResultIdNote.rowCount; i++) {
                 const NoteId = ResultIdNote.rows[i].id;
-                console.log('Проверка', NoteId)
+                console.log('PFVTYVSDAYGITYILTYGVLYGLYFVGOTFOFOTFU', NoteId)
+
+                // Проверяем, есть ли теги у заметки
                 const ResultTags = await pool.query(
                     `SELECT tag_id FROM note_tags WHERE note_id = $1`, [NoteId]
                 );
 
                 if (ResultTags.rowCount > 0) {
+                    // Если теги есть, удаляем их
                     await pool.query(
                         `DELETE FROM note_tags WHERE note_id = $1`, [NoteId]
                     );
                 }
+
+                // Удаляем заметку
                 await pool.query(
                     `DELETE FROM notes WHERE id = $1`, [NoteId]
                 );
             }
         }
+
+        // Удаляем пользователя
         const result = await pool.query(
             `DELETE FROM users WHERE id = $1`, [UserId]
         );
@@ -419,6 +411,7 @@ app.post('/users/:login/notes/:noteId/tags', async (req, res) => {
     const { tag } = req.body;
 
     try {
+        // Вставить тег, если его нет
         let tagId;
         const existingTag = await pool.query(
             `SELECT id FROM tags WHERE name = $1`,
@@ -426,14 +419,17 @@ app.post('/users/:login/notes/:noteId/tags', async (req, res) => {
         );
 
         if (existingTag.rows.length > 0) {
+            // Если тег уже существует, получить его ID
             tagId = existingTag.rows[0].id;
         } else {
+            // Если тега нет, вставить его и получить ID
             const newTag = await pool.query(
                 `INSERT INTO tags (name) VALUES ($1) RETURNING id`,
                 [tag]
             );
             tagId = newTag.rows[0].id;
         }
+        // Привязать тег к заметке
         await pool.query(
             `INSERT INTO note_tags (note_id, tag_id)
              VALUES ($1, $2)`,

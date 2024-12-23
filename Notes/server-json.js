@@ -60,7 +60,7 @@ export const validate = (schema) => async (req, res, next) => {
 
         res.status(400).json({
             success: false,
-            message: 'Ошибка валидации данных',
+            message: 'Ошибка данных',
             errors: formattedErrors,
         });
     }
